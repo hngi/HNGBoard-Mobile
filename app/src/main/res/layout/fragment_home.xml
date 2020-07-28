@@ -196,7 +196,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/dm_sans_regular"
-                        android:text="Your latest tsk expired 2 months ago"
+                        android:text="Your latest task expired 2 months ago"
                         android:textSize="14sp"
                         app:layout_constraintStart_toEndOf="@+id/recent_image"
                         app:layout_constraintTop_toTopOf="@+id/recent_image" />
