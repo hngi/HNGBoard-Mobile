@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     ActionBarDrawerToggle mDrawerToggle;
+    NavItem[] drawerItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupToolbar();
 
-        NavItem[] drawerItem = new NavItem[4];
+        drawerItem = new NavItem[4];
 
         drawerItem[0] = new NavItem("Dashboard",R.drawable.dashboard);
         drawerItem[1] = new NavItem("Task", R.drawable.task);
