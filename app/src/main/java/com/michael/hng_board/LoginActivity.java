@@ -2,7 +2,9 @@ package com.michael.hng_board;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,8 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.michael.hng_board.Utils.Helper;
 import com.michael.hng_board.homepage.Home_activity;
+
+import org.json.JSONObject;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -21,6 +27,8 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
+    Helper helper;
+
     TextView signIn;
     EditText Username, Password;
 
@@ -28,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        helper = new Helper(this);
 
         Username = findViewById(R.id.login_email_username);
         Password = findViewById(R.id.login_password);
@@ -50,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Login login = new Login();
         login.execute(username,password);
+        helper.progressDialogStart("Logging in", "Please wait while we log you in");
 
     }
 
@@ -78,8 +89,31 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i("hhh", "hhh0");
                 String result = response.body().string();
                 Log.i("responseBody", result);
-                Intent i = new Intent(LoginActivity.this, Home_activity.class);
-                startActivity(i);
+                JSONObject jsonObject = new JSONObject(result);
+                String resultData = jsonObject.getString("status");
+                if (resultData.equalsIgnoreCase("success")){
+
+                    JSONObject newjsonObject = new JSONObject(result);
+                    String dataData = jsonObject.getString("data");
+                    JSONObject datajsonObject = new JSONObject(dataData);
+                    String token = datajsonObject.getString("token");
+                    String userId = datajsonObject.getString("userId");
+
+                    helper.progressDialogEnd();
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("TOKEN", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("token", token);
+                    editor.putString("userId", userId);
+                    editor.apply();
+
+                }else {
+                    helper.progressDialogEnd();
+                    showToast("Login failed! Check login details");
+                }
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -87,5 +121,14 @@ public class LoginActivity extends AppCompatActivity {
 
             return null;
         }
+    }
+
+    public void showToast(final String Text){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LoginActivity.this, Text, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
