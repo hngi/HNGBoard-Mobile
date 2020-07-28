@@ -40,6 +40,7 @@
     <string name="post">Post</string>
 
     <string-array name="tracks">
+        <item>Select your track</item>
         <item>Mobile</item>
         <item>Frontend</item>
         <item>Backend</item>
@@ -48,6 +49,7 @@
     </string-array>
 
     <string-array name="countries" formatted="false" translatable="false">
+        <item>Select your location</item>
         <item>Afghanistan</item>
         <item>Albania</item>
         <item>Algeria</item>
